@@ -8,13 +8,15 @@ class Scene1 extends Phaser.Scene {
         // load image
         this.load.image('background', './assets/background.png');
         this.load.image('road', './assets/road.png');
-        this.load.image('character', './assets/character.png');
+        //this.load.image('character', './assets/character.png');
         this.load.image('block', './assets/block.png');
-        this.load.image('vblock1', './assets/verticalblock2.png');
-        this.load.image('vblock2', './assets/verticalblock3.png');
+        //this.load.image('slug', './assets/slug.png');
+        this.load.image('vblock2', './assets/verticalblock2.png');
         this.load.audio('jump', './assets/jump.wav');
         this.load.audio('dead', './assets/dead.wav');
-        //this.load.spritesheet('character', './assets/texture_atlas.png', {frameWidth: 270, frameHeight: 270});
+        this.load.spritesheet('character', './assets/slug.png', {frameWidth: 142, frameHeight: 119});
+        this.load.spritesheet('squirrel', './assets/squirrel.png', {frameWidth: 150, frameHeight: 100});
+        //this.load.spritesheet('slug', './assets/slug.png', {frameWidth: , frameHeight: 202});
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
@@ -24,7 +26,7 @@ class Scene1 extends Phaser.Scene {
         this.level = 370; 
         this.gamespeed = 3;
         this.ACCELERATION = 1500;
-        this.JUMP_VELOCITY = -900;
+        this.JUMP_VELOCITY = -700;
         this.MAX_JUMPS = 2;
         this.DRAG = 600;
         this.MAX_X_VEL = 500;   // pixels/second
@@ -34,17 +36,28 @@ class Scene1 extends Phaser.Scene {
         this.ground = this.physics.add.sprite(0, game.config.height - 30, 'road').setOrigin(0,0);
         this.ground.body.immovable = true;
         this.ground.body.allowGravity = false;
-        this.character = this.physics.add.sprite(120, 600, 'character').setScale(0.4);
+        this.character = this.physics.add.sprite(120 , 600, 'character').setScale(0.8);
         this.character.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         this.character.setCollideWorldBounds(true);
         cursors = this.input.keyboard.createCursorKeys();
 
         this.physics.add.collider(this.character, this.ground);
 
+        this.anims.create({
+            key: 'enemy1',
+            frames: this.anims.generateFrameNames('squirrel', {start: 1, end: 2}),
+            frameRate:10
+        });
         // this.anims.create({
-        //     key: 'run',
-        //     frames: this.anims.generateFrameNames('character', {start: 1, end: 3})
+        //     key: 'sluggy',
+        //     frames: this.anims.generateFrameNames('slug', {start: 1, end: 4}),
+        //     frameRate:10
         // });
+
+        this.anims.create({
+            key: 'run',
+            frames: this.anims.generateFrameNames('character', {start: 1, end: 4})
+        });
 
         //score
         this.score = 0;
@@ -66,21 +79,23 @@ class Scene1 extends Phaser.Scene {
         
         this.random = Phaser.Math.RND.integerInRange(1, 450);
         if(1 == this.random){
-            this.block = this.physics.add.sprite(1500, 660, 'block').setScale(0.5);
+            this.block = this.physics.add.sprite(1500, 670, 'squirrel').setScale(0.6);
             this.block.body.setVelocityX(- this.level);
             this.block.body.allowGravity = false
             this.block.body.immovable = true;
             this.physics.add.collider(this.character, this.block);
+            this.block.anims.play('enemy1', true);
         }
         else if (2 == this.random){
-            this.block2 = this.physics.add.sprite(1500, 620, 'vblock1').setScale(0.5);
+            this.block2 = this.physics.add.sprite(1500, 650, 'vblock2').setScale(0.8);
             this.block2.body.setVelocityX(- this.level);
             this.block2.body.allowGravity = false
             this.block2.body.immovable = true;
             this.physics.add.collider(this.character, this.block2);
+            //this.block.anims.play('sluggy', true);
         }
         else if (3 == this.random){
-            this.block3 = this.physics.add.sprite(1500, 585, 'vblock2').setScale(0.5);
+            this.block3 = this.physics.add.sprite(1500, 660, 'block').setScale(0.8);
             this.block3.body.setVelocityX(- this.level);
             this.block3.body.allowGravity = false
             this.block3.body.immovable = true;
@@ -90,11 +105,11 @@ class Scene1 extends Phaser.Scene {
         if(cursors.left.isDown) {
             this.character.body.setAccelerationX(-this.ACCELERATION);
             this.character.setFlip(true, false);
-            //this.character.anims.play('run', true);
+            this.character.anims.play('run', true);
         } else if(cursors.right.isDown) {
             this.character.body.setAccelerationX(this.ACCELERATION);
             this.character.resetFlip();
-            //this.character.anims.play('run', true);
+            this.character.anims.play('run', true);
         } else if(cursors.down.isDown) {
             this.physics.world.gravity.y = 20000; 
         } else {
