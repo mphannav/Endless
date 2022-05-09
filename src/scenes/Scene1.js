@@ -4,19 +4,14 @@ class Scene1 extends Phaser.Scene {
     }
 
     preload() {
- 
-        // load image
         this.load.image('background', './assets/background.png');
         this.load.image('road', './assets/road.png');
-        //this.load.image('character', './assets/character.png');
         this.load.image('block', './assets/block.png');
-        //this.load.image('slug', './assets/slug.png');
         this.load.image('vblock2', './assets/verticalblock2.png');
         this.load.audio('jump', './assets/jump.wav');
         this.load.audio('dead', './assets/dead.wav');
         this.load.spritesheet('character', './assets/slug.png', {frameWidth: 142, frameHeight: 119});
         this.load.spritesheet('squirrel', './assets/squirrel.png', {frameWidth: 150, frameHeight: 100});
-        //this.load.spritesheet('slug', './assets/slug.png', {frameWidth: , frameHeight: 202});
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
@@ -113,19 +108,15 @@ class Scene1 extends Phaser.Scene {
         } else if(cursors.down.isDown) {
             this.physics.world.gravity.y = 20000; 
         } else {
-            // set acceleration to 0 so DRAG will take over
             this.character.body.setAccelerationX(0);
             this.character.body.setDragX(this.DRAG);
             
         }
-        // check if alien is grounded
 	    this.character.isGrounded = this.character.body.touching.down;
-	    // if so, we have jumps to spare
 	    if(this.character.isGrounded) {
 	    	this.jumps = this.MAX_JUMPS;
 	    	this.jumping = false;
 	    } 
-        // allow steady velocity change up to a certain key down duration
 	    if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
 	        this.character.body.velocity.y = this.JUMP_VELOCITY;
 	        this.physics.world.gravity.y = 2600;
@@ -140,7 +131,6 @@ class Scene1 extends Phaser.Scene {
 
         if(this.character.body.touching.right || this.character.body.touching.left)
         {
-        // player is dead
         this.sound.play('dead'); 
         this.scene.start('over');
         }
