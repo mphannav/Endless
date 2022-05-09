@@ -10,7 +10,7 @@ class Scene1 extends Phaser.Scene {
         this.load.image('vblock2', './assets/verticalblock2.png');
         this.load.audio('jump', './assets/jump.wav');
         this.load.audio('dead', './assets/dead.wav');
-        this.load.spritesheet('character', './assets/slug.png', {frameWidth: 142, frameHeight: 119});
+        this.load.spritesheet('character', './assets/slug.png', {frameWidth: 142, frameHeight: 119, startFrame: 0, endFrame: 3});
         this.load.spritesheet('squirrel', './assets/squirrel.png', {frameWidth: 150, frameHeight: 100});
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -22,7 +22,7 @@ class Scene1 extends Phaser.Scene {
         this.gamespeed = 3;
         this.ACCELERATION = 1500;
         this.JUMP_VELOCITY = -700;
-        this.MAX_JUMPS = 2;
+        this.MAX_JUMPS = 1;
         this.DRAG = 600;
         this.MAX_X_VEL = 500;   // pixels/second
         this.MAX_Y_VEL = 5000;
@@ -40,7 +40,7 @@ class Scene1 extends Phaser.Scene {
 
         this.anims.create({
             key: 'enemy1',
-            frames: this.anims.generateFrameNames('squirrel', {start: 1, end: 2}),
+            frames: this.anims.generateFrameNames('squirrel', {start: 0, end: 2}),
             frameRate:10
         });
         // this.anims.create({
@@ -51,7 +51,7 @@ class Scene1 extends Phaser.Scene {
 
         this.anims.create({
             key: 'run',
-            frames: this.anims.generateFrameNames('character', {start: 1, end: 4})
+            frames: this.anims.generateFrameNames('character', {start: 0, end: 4})
         });
 
         //score
@@ -131,8 +131,8 @@ class Scene1 extends Phaser.Scene {
 
         if(this.character.body.touching.right || this.character.body.touching.left)
         {
-        this.sound.play('dead'); 
         this.scene.start('over');
+        this.sound.play('dead'); 
         }
     }
 }
